@@ -420,10 +420,10 @@ void restore_folder(const char *dir, vector<raw_file> &files) {
     for (raw_file &file : files) {
         string path = base + "/" + file.path;
         if (S_ISDIR(file.attr.st.st_mode)) {
-            mkdirs(path.data(), 0);
+            mkdirs(path, 0);
         } else if (S_ISREG(file.attr.st.st_mode)) {
             auto fp = xopen_file(path.data(), "we");
-            fwrite(file.buf, 1, file.sz, fp.get());
+            if (fp) fwrite(file.buf, 1, file.sz, fp.get());
         } else if (S_ISLNK(file.attr.st.st_mode)) {
             symlink((char *)file.buf, path.data());
         }
